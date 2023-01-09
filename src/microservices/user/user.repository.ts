@@ -65,3 +65,30 @@ export async function updateUserByID(userId: string, data: { [key: string]: any 
         throw new Error(`Couldn't update the user, Error ${err}`);
     }
 }
+
+export async function getLargestToken(): Promise<Number>{
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { user } = await dbConn();
+            let data:Number = await user.max("userToken");
+            resolve(null == data ? 0 : data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+export async function getUserByToken(userToken:Number, transaction:any): Promise<typeof User> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { user } = await dbConn();
+        let data = await user.findOne({
+          where: { userToken },
+          transaction,
+        });
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
