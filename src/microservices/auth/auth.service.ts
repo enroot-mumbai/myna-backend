@@ -1,6 +1,6 @@
-import * as userModel from '../repository/user';
-import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError, UnprocessableEntityError } from '../utils/error-handler';
-import * as otpUtil from '../utils/otp';
+import * as userModel from '../user/user.repository';
+import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError, UnprocessableEntityError } from '../../utils/error-handler';
+import * as otpUtil from '../../utils/otp';
 // import { sendSMS } from '../common/communications/sendSMSWithTwillio';
 import bcrypt from 'bcryptjs';
 
