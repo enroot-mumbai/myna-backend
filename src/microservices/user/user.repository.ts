@@ -1,6 +1,6 @@
-import { NotFoundError } from '../utils/error-handler';
-import { mapDataToModel } from '../utils/mapModelKeys';
-import dbConn from './../models';
+import { NotFoundError } from '../../utils/error-handler';
+import { mapDataToModel } from '../../utils/mapModelKeys';
+import dbConn from './../../models';
 
 const User = dbConn.User;
 

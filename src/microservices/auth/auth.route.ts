@@ -1,6 +1,6 @@
 import express from 'express';
-import { login, signup, verifyOTP, forgotPassword, resetPassword } from '../controllers/auth';
-import { signInValidation,signUpValidation } from '../middleware/validations/authValidations';
+import { login, signup, verifyOTP, forgotPassword, resetPassword } from './auth.controller';
+import { signInValidation,signUpValidation } from '../../middleware/validations/authValidations';
 
 const router = express.Router();
 

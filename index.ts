@@ -1,8 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import auth from './src/routes/auth'
+import auth from './src/microservices/auth/auth.route'
 
-// import { cleaner } from './src/middleware/cleaner';
+import { cleaner } from './src/middleware/cleaner';
 
 // Import essential functions
 import cors from 'cors'
@@ -28,7 +28,7 @@ app.use(express.json({ limit: "5mb" }));
 app.set("etag", false);
 
 // remove any null or undefined keys from the request body
-// app.use("/", cleaner);
+app.use("/", cleaner);
 
 
 app.use("/auth", auth);
