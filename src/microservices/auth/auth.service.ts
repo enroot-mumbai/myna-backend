@@ -3,6 +3,7 @@ import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError, Unpro
 import * as otpUtil from '../../utils/otp';
 // import { sendSMS } from '../common/communications/sendSMSWithTwillio';
 import bcrypt from 'bcryptjs';
+import { jwtSign } from '../../common/functions/jwt';
 
 // import { sendEmailUsingNodemailer } from '../common/communications/sendEmailUsingNodemailer';
 
@@ -30,7 +31,8 @@ export async function login(email: string, phone: string, password: string) {
   }
 
   // If password is correct return user and token
-  // TODO: Return token as well 
+  const token = jwtSign(user);
+  user.dataValues.token = token;
   return user;
 }
 
@@ -38,9 +40,6 @@ export async function signup(email: string, phone: string, password: string) {
   let user;
   const hashedPassword = await bcrypt.hash(password, 10);
   const otp = otpUtil.generateOTP();
-
-
-  // TODO - Add validations for phone number and email
 
   // User signup with Email
   if (email) {
@@ -76,6 +75,8 @@ export async function signup(email: string, phone: string, password: string) {
     );
   }
 
+  const token = jwtSign(user);
+  user.dataValues.token = token;
   return user;
 }
 

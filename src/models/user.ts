@@ -1,8 +1,10 @@
 'use strict';
 
 import {
+  CreateOptions,
   Model, UUIDV4
 } from 'sequelize';
+import { getLargestToken } from '../microservices/user/user.repository';
 
 interface UserAttributes {
   id: string;
@@ -25,11 +27,12 @@ interface UserAttributes {
   emailOTP: string;
   phoneOTP: string;
   resetPasswordOTP: string;
+  userToken: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class User extends Model<UserAttributes> 
-  implements UserAttributes {
+  class User extends Model<UserAttributes>
+    implements UserAttributes {
     phone!: string;
     address!: string;
     city!: string;
@@ -47,6 +50,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     phoneOTP!: string;
     resetPasswordOTP!: string;
     id!: string;
+    userToken!: number;
     name!: string;
     email!: string;
     password!: string;
@@ -56,6 +60,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.UUID,
       defaultValue: UUIDV4,
       primaryKey: true,
+    },
+    userToken: {
+      type: DataTypes.INTEGER,
     },
     name: {
       type: DataTypes.STRING,
@@ -128,6 +135,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
     sequelize,
     modelName: 'User',
   });
+
+  User.beforeCreate(async (user: User, _: CreateOptions<UserAttributes>): Promise<any> => {
+    let userToken = await getLargestToken();
+    user.userToken = Number(userToken) + Math.floor(Number(Math.random().toFixed(2)) * 100);
+    return user;
+  });
+
   return User;
 };
 

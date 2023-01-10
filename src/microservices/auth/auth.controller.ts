@@ -15,9 +15,6 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 export async function signup(req: Request, res: Response, next: NextFunction) {
   const { email, phone, password } = await req.body;
 
-  // console.log('req', req)
-  console.log('req.body', req.body)
-
   try {
     const user = await authService.signup(email, phone, password);
     res.send(user);
