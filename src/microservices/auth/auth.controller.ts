@@ -25,14 +25,14 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function verifyOTP(req: Request, res: Response) {
-  const { email, phone, otp } = req.body;
+  const { id, otp } = req.body;
 
-  // try {
-  //   await authService.verifyOTP(email, phone, otp);
-  //   res.send('Verification successful');
-  // } catch (error: any) {
-  //   res.status(400).send(error.message);
-  // }
+  try {
+    await authService.verifyOTP(id, otp);
+    res.status(200).send('Verification successful');
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 }
 
 export async function forgotPassword(req: Request, res: Response) {

@@ -54,3 +54,17 @@ export const signUpValidation = async (req: Request, res: Response, next: NextFu
         next(error);
     }
 };
+
+export const verifyOTPValidation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const validationRule = {
+            id: "required|string",
+            otp: "required|string",
+        };
+        await validateRules(req.body, validationRule);
+        next();
+
+    } catch (error) {
+        next(error);
+    }
+};

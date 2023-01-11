@@ -55,6 +55,7 @@ export async function signup(email: string, phone: string, password: string) {
     user = await userModel.createUserWithEmail(
       email,
       hashedPassword,
+      '123456'
     );
   }
   // User signup with Phone
@@ -72,6 +73,7 @@ export async function signup(email: string, phone: string, password: string) {
     user = await userModel.createUserWithPhone(
       phone,
       hashedPassword,
+      '123456'
     );
   }
 
@@ -80,41 +82,40 @@ export async function signup(email: string, phone: string, password: string) {
   return user;
 }
 
-// export async function verifyOTP(email: string, phone: string, otp: string) {
-//   let user;
+export async function verifyOTP(id: string, otp: string) {
+  let user;
 
-//   if (email) {
-//     user = await userModel.getUserByEmail(email);
+  user = await userModel.getUserById(id,null);
 
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid email');
-//     }
+  if (!user) {
+    throw new UnprocessableEntityError('Invalid User ID');
+  }
 
-//     if (user.emailOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
-
-//     await userModel.updateUserByID(user.id, {
-//       emailVerified: true,
-//       emailOTP: null,
-//     });
-//   } else if (phone) {
-//     user = await userModel.getUserByPhone(phone);
-
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid phone number');
-//     }
-
-//     if (user.phoneOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
-
-//     await userModel.updateUserByID(user.id, {
-//       phoneVerified: true,
-//       phoneOTP: null,
-//     });
-//   }
-// }
+  if(user.loginMethod === 'email'){
+    if(user.emailVerified){
+      throw new UnprocessableEntityError('User already verified');
+    }
+    if (user.emailOTP !== otp) {
+      throw new UnprocessableEntityError('Invalid OTP');
+    }
+    await userModel.updateUserByID(user.id, {
+      emailVerified: true,
+      emailOTP: null,
+    });
+  }
+  else if(user.loginMethod === 'phone'){
+    if(user.phoneVerified){
+      throw new UnprocessableEntityError('User already verified');
+    }
+    if (user.phoneOTP !== otp) {
+      throw new UnprocessableEntityError('Invalid OTP');
+    }
+    await userModel.updateUserByID(user.id, {
+      phoneVerified: true,
+      phoneOTP: null,
+    });
+  }
+}
 
 // export async function forgotPassword(email: string, phone: string) {
 //   let user;
