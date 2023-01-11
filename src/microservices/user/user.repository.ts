@@ -14,7 +14,6 @@ export async function getUserByEmail(email: string): Promise<typeof User | null>
     }
 }
 
-
 export async function getUserByPhone(phone: string): Promise<typeof User | null> {
     try {
         const user = await User.findOne({ where: { phone } });
@@ -38,7 +37,7 @@ export async function createUserWithEmail(email: string, password: string, otp: 
         ...user,
         dataValues: {
             id: user.dataValues.id,
-            phone: user.dataValues.phone,
+            email: user.dataValues.email,
             emailVerified: user.dataValues.emailVerified
         }
     }

@@ -14,7 +14,7 @@ export const updateUserValidation = async (req: Request, res: Response, next: Ne
             city: "string",
             state: "string",
             country: "string",
-            dateOfBirth: "date"
+            dob: "date"
         };
         await validateRules(req.body.data, validationRule);
         next();
