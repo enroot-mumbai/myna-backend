@@ -68,3 +68,50 @@ export const verifyOTPValidation = async (req: Request, res: Response, next: Nex
         next(error);
     }
 };
+
+
+export const forgotPasswordValidation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.body.email) {
+            const validationRule = {
+                email: "required|string|email"
+            };
+            await validateRules(req.body, validationRule);
+            next();
+        }
+        else if (req.body.phone) {
+            const validationRule = {
+                phone: "required|string|min:10"
+            };
+            await validateRules(req.body, validationRule);
+            next();
+        }
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const resetVerifyOTPValidation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.body.email) {
+            const validationRule = {
+                email: "required|string|email",
+                otp: "required|string"
+            };
+            await validateRules(req.body, validationRule);
+            next();
+        }
+        else if (req.body.phone) {
+            const validationRule = {
+                phone: "required|string|min:10",
+                otp: "required|string"
+            };
+            await validateRules(req.body, validationRule);
+            next();
+        }
+
+    } catch (error) {
+        next(error);
+    }
+};
