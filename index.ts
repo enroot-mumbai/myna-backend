@@ -13,7 +13,7 @@ import helmet from 'helmet'
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 import db from './src/models';
 import { users } from './src/seeders/users';
 import errorMiddleware from './src/middleware/error'

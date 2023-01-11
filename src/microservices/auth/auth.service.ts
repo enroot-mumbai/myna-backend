@@ -85,14 +85,14 @@ export async function signup(email: string, phone: string, password: string) {
 export async function verifyOTP(id: string, otp: string) {
   let user;
 
-  user = await userModel.getUserById(id,null);
+  user = await userModel.getUserById(id, null);
 
   if (!user) {
     throw new UnprocessableEntityError('Invalid User ID');
   }
 
-  if(user.loginMethod === 'email'){
-    if(user.emailVerified){
+  if (user.loginMethod === 'email') {
+    if (user.emailVerified) {
       throw new UnprocessableEntityError('User already verified');
     }
     if (user.emailOTP !== otp) {
@@ -103,8 +103,8 @@ export async function verifyOTP(id: string, otp: string) {
       emailOTP: null,
     });
   }
-  else if(user.loginMethod === 'phone'){
-    if(user.phoneVerified){
+  else if (user.loginMethod === 'phone') {
+    if (user.phoneVerified) {
       throw new UnprocessableEntityError('User already verified');
     }
     if (user.phoneOTP !== otp) {
@@ -117,68 +117,90 @@ export async function verifyOTP(id: string, otp: string) {
   }
 }
 
-// export async function forgotPassword(email: string, phone: string) {
-//   let user;
+export async function forgotPassword(email: string, phone: string) {
+  let user;
 
-//   if (email) {
-//     user = await userModel.getUserByEmail(email);
+  if (email) {
+    user = await userModel.getUserByEmail(email);
 
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid email');
-//     }
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid email or there is no user with this mail ID');
+    }
 
-//     const otp = otpUtil.generateOTP();
-//     console.log('Your OTP is', otp)
-//     // sendEmailUsingNodemailer(email, 'Reset Password OTP', `Your OTP is ${otp}`);
+    const otp = otpUtil.generateOTP();
+    console.log('Your OTP is', otp)
+    // sendEmailUsingNodemailer(email, 'Reset Password OTP', `Your OTP is ${otp}`);
 
-//     await userModel.updateUserByID(user.id, { resetPasswordOTP: otp });
-//   } else if (phone) {
-//     user = await userModel.getUserByPhone(phone);
+    await userModel.updateUserByID(user.id, { resetPasswordOTP: otp });
+  } else if (phone) {
+    user = await userModel.getUserByPhone(phone);
 
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid phone number');
-//     }
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid phone number or there is no user with this phone number');
+    }
 
-//     const otp = otpUtil.generateOTP();
-//     console.log('Your OTP is', otp)
-//     // sendSMS(phone, `Your OTP is ${otp}`);
+    const otp = otpUtil.generateOTP();
+    console.log('Your OTP is', otp)
+    // sendSMS(phone, `Your OTP is ${otp}`);
 
-//     await userModel.updateUserByID(user.id, { resetPasswordOTP: otp });
-//   }
-// }
+    await userModel.updateUserByID(user.id, { resetPasswordOTP: otp });
+  }
+}
 
-// export async function resetPassword(email: string, phone: string, otp: string, newPassword: string) {
-//   let user;
 
-//   if (email) {
-//     user = await userModel.getUserByEmail(email);
 
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid email');
-//     }
+export async function resetPasswordVerifyOTP(email: string, phone: string, otp: string) {
+  let user;
 
-//     if (user.resetPasswordOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
+  if (email) {
+    user = await userModel.getUserByEmail(email);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid Email ID');
+    }
+  }
+  else if (phone) {
+    user = await userModel.getUserByPhone(phone);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid Phone number');
+    }
+  }
 
-//     await userModel.updateUserByID(user.id, {
-//       password: newPassword,
-//       resetPasswordOTP: null,
-//     });
-//   } else if (phone) {
-//     user = await userModel.getUserByPhone(phone);
+  if (user.resetPasswordVerified) {
+    throw new UnprocessableEntityError('OTP is already verified');
+  }
 
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid phone number');
-//     }
+  if (user.resetPasswordOTP !== otp) {
+    throw new UnprocessableEntityError('Invalid OTP');
+  }
 
-//     if (user.resetPasswordOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
+  await userModel.updateUserByID(user.id, {
+    resetPasswordVerified: true,
+    resetPasswordOTP: null,
+  });
 
-//     await userModel.updateUserByID(user.id, {
-//       password: newPassword,
-//       resetPasswordOTP: null,
-//     });
-//   }
-// }
+}
+
+export async function resetPassword(email: string, phone: string, newPassword: string) {
+  let user;
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  if (email) {
+    user = await userModel.getUserByEmail(email);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid email');
+    }
+  } else if (phone) {
+    user = await userModel.getUserByPhone(phone);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid phone number');
+    }
+  }
+  if (user.resetPasswordVerified) {
+    await userModel.updateUserByID(user.id, {
+      password: hashedPassword,
+      resetPasswordOTP: null,
+      resetPasswordVerified: false
+    });
+  } else {
+    throw new UnprocessableEntityError('Please request to reset password');
+  }
+}

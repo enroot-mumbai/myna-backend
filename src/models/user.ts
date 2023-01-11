@@ -27,6 +27,7 @@ interface UserAttributes {
   emailOTP: string;
   phoneOTP: string;
   resetPasswordOTP: string;
+  resetPasswordVerified: string;
   userToken: number;
 }
 
@@ -54,6 +55,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     name!: string;
     email!: string;
     password!: string;
+    resetPasswordVerified!: string;
   };
   User.init({
     id: {
@@ -116,11 +118,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     emailVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: false,
     },
     phoneVerified: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true,
+      defaultValue: false,
     },
     emailOTP: {
       type: DataTypes.STRING,
@@ -130,6 +132,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
     resetPasswordOTP: {
       type: DataTypes.STRING,
+    },
+    resetPasswordVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   }, {
     sequelize,

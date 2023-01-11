@@ -38,22 +38,32 @@ export async function verifyOTP(req: Request, res: Response) {
 export async function forgotPassword(req: Request, res: Response) {
   const { email, phone } = req.body;
 
-  // try {
-  //   const otp = await authService.forgotPassword(email, phone);
-  //   // TODO: Just send message not the otp
-  //   res.send({ otp });
-  // } catch (error: any) {
-  //   res.status(400).send(error.message);
-  // }
+  try {
+    const otp = await authService.forgotPassword(email, phone);
+    // TODO: Just send message not the otp
+    res.send('OTP sent for verification');
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
+}
+
+export async function resetVerifyOTP(req: Request, res: Response) {
+  const { email, phone, otp } = req.body;
+
+  try {
+    await authService.resetPasswordVerifyOTP(email, phone, otp);
+    res.status(200).send('Verification successful');
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 }
 
 export async function resetPassword(req: Request, res: Response) {
-  const { email, phone, otp, password } = req.body;
-
-  // try {
-  //   await authService.resetPassword(email, phone, otp, password);
-  //   res.send('Password reset successful');
-  // } catch (error: any) {
-  //   res.status(400).send(error.message);
-  // }
+  const { email, phone, password } = req.body;
+  try {
+    await authService.resetPassword(email, phone, password);
+    res.send('Password reset successful');
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 }
