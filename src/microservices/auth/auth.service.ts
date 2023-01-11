@@ -180,38 +180,27 @@ export async function resetPasswordVerifyOTP(email: string, phone: string, otp: 
 
 }
 
-// export async function resetPassword(email: string, phone: string, otp: string, newPassword: string) {
-//   let user;
-//    //Check if resetPasswordVerified = true
-//   if (email) {
-//     user = await userModel.getUserByEmail(email);
-
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid email');
-//     }
-
-//     if (user.resetPasswordOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
-
-//     await userModel.updateUserByID(user.id, {
-//       password: newPassword,
-//       resetPasswordOTP: null,
-//     });
-//   } else if (phone) {
-//     user = await userModel.getUserByPhone(phone);
-
-//     if (!user) {
-//       throw new UnprocessableEntityError('Invalid phone number');
-//     }
-
-//     if (user.resetPasswordOTP !== otp) {
-//       throw new UnprocessableEntityError('Invalid OTP');
-//     }
-
-//     await userModel.updateUserByID(user.id, {
-//       password: newPassword,
-//       resetPasswordOTP: null,
-//     });
-//   }
-// }
+export async function resetPassword(email: string, phone: string, newPassword: string) {
+  let user;
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  if (email) {
+    user = await userModel.getUserByEmail(email);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid email');
+    }
+  } else if (phone) {
+    user = await userModel.getUserByPhone(phone);
+    if (!user) {
+      throw new UnprocessableEntityError('Invalid phone number');
+    }
+  }
+  if (user.resetPasswordVerified) {
+    await userModel.updateUserByID(user.id, {
+      password: hashedPassword,
+      resetPasswordOTP: null,
+      resetPasswordVerified: false
+    });
+  } else {
+    throw new UnprocessableEntityError('Please request to reset password');
+  }
+}

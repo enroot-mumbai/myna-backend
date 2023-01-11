@@ -59,12 +59,11 @@ export async function resetVerifyOTP(req: Request, res: Response) {
 }
 
 export async function resetPassword(req: Request, res: Response) {
-  const { email, phone, otp, password } = req.body;
-
-  // try {
-  //   await authService.resetPassword(email, phone, otp, password);
-  //   res.send('Password reset successful');
-  // } catch (error: any) {
-  //   res.status(400).send(error.message);
-  // }
+  const { email, phone, password } = req.body;
+  try {
+    await authService.resetPassword(email, phone, password);
+    res.send('Password reset successful');
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 }
