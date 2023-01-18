@@ -3,8 +3,6 @@ import { NextFunction, Request, Response } from 'express';
 
 export const updateUserValidation = async (req: Request, res: Response, next: NextFunction) => {
 
-    // TODO: Check if the user is authorized or not
-    
     try {
         const validationRule = {
             name:"string",
@@ -16,7 +14,7 @@ export const updateUserValidation = async (req: Request, res: Response, next: Ne
             country: "string",
             dob: "date"
         };
-        await validateRules(req.body.data, validationRule);
+        await validateRules(req.body, validationRule);
         next();
     } catch (error) {
         next(error);
