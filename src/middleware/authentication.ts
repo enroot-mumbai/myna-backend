@@ -1,11 +1,14 @@
 import jwt from 'jsonwebtoken';
 import { getUserByToken } from './../microservices/user/user.repository';
 import { NextFunction, Request, Response } from 'express';
+import { UnauthorizedError } from '../utils/error-handler';
+import {NO_TOKEN, INVALID_TOKEN} from './../common/constants/messages'
 
+import dotenv from 'dotenv';
+dotenv.config();
 
 // const { getEmployeeByUid } = require("../../repository/employeeRepository");
 
-const { NO_TOKEN, INVALID_TOKEN } = require("../constants/messages");
 
 declare module 'jsonwebtoken' {
   export interface UserIDJwtPayload extends jwt.JwtPayload {
@@ -26,25 +29,24 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
     try {
       userJwt = <jwt.UserIDJwtPayload>jwt.verify(String(token).split(" ")[1], JWT_SECRET);
     } catch (error) {
-      throw INVALID_TOKEN;
+      throw new UnauthorizedError(INVALID_TOKEN);
     }
 
     if (null === userJwt) {
-      throw NO_TOKEN;
+      throw new UnauthorizedError(NO_TOKEN);
     }
 
     if (!Object.keys(userJwt).includes("userToken")) {
-      throw INVALID_TOKEN;
+      throw new UnauthorizedError(INVALID_TOKEN);
     }
     let user = await getUserByToken(Number(userJwt.userToken), null);
 
     if (null == user) {
-      throw INVALID_TOKEN;
+      throw new UnauthorizedError(INVALID_TOKEN);
     }
 
     res.locals.user = user;
     res.locals.userJwt = userJwt;
-
     next();
   } catch (error) {
     next(error);

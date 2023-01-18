@@ -4,25 +4,21 @@ import dotenv from 'dotenv';
 dotenv.config();
 const jwtSecretKey = process.env.JWT_SECRET || '';
 
-export const jwtSign = (token:any ) => {
-
+export const jwtSign = (token: any) => {
+  let tokenToSign;
   if (Object.keys(token).includes("dataValues")) {
-    token = token.dataValues;
+    tokenToSign = token.dataValues;
   }
 
   if (Object.keys(token).includes("employeeToken")) {
-    token = {
-      employeeToken: token.employeeToken,
-    };
+    tokenToSign.employeeToken = token.employeeToken;
   }
 
   if (Object.keys(token).includes("userToken")) {
-    token = {
-      userToken: token.userToken,
-    };
+    tokenToSign.userToken = token.userToken;
   }
 
-  return `Bearer ${jwt.sign(JSON.parse(JSON.stringify(token)), jwtSecretKey, {
+  return `Bearer ${jwt.sign(JSON.parse(JSON.stringify(tokenToSign)), jwtSecretKey, {
     expiresIn: "90d",
   })}`;
 };

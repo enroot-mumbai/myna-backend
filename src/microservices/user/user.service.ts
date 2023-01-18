@@ -8,3 +8,9 @@ export async function updateUserService(userId:string, data:any) {
   // TODO: Return token as well 
   return user;
 }
+
+export async function getUser(userId:string) {
+  let user;
+  user = await userModel.getUserById(userId, null);
+  return user;
+}

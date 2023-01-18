@@ -38,8 +38,9 @@ export async function createUserWithEmail(email: string, password: string, otp: 
         dataValues: {
             id: user.dataValues.id,
             email: user.dataValues.email,
-            emailVerified: user.dataValues.emailVerified
-        }
+            emailVerified: user.dataValues.emailVerified,
+        },
+        userToken: user.dataValues.userToken
     }
 
     return userData;
@@ -60,10 +61,11 @@ export async function createUserWithPhone(phone: string, password: string, otp: 
         dataValues: {
             id: user.dataValues.id,
             phone: user.dataValues.phone,
-            phoneVerified: user.dataValues.phoneVerified
-        }
+            phoneVerified: user.dataValues.phoneVerified,
+        },
+        userToken: user.dataValues.userToken
     }
-
+    
     return userData;
 }
 
