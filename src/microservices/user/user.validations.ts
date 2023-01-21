@@ -12,7 +12,7 @@ export const updateUserValidation = async (req: Request, res: Response, next: Ne
             city: "string",
             state: "string",
             country: "string",
-            dob: "date"
+            dateOfBirth: "date"
         };
         await validateRules(req.body, validationRule);
         next();
