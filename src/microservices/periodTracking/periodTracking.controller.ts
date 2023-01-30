@@ -37,3 +37,13 @@ export async function updatePeriodByUser(req: Request, res: Response, next: Next
   }
 }
 
+export async function getPeriodByID(req: Request, res: Response, next: NextFunction) {
+  const id = res.locals.user.dataValues.id;
+  const periodId = req.params.periodId;
+  try {
+    const period = await periodTrackingRepository.getPeriodByID(id,periodId, null);
+    res.send(period);
+  } catch (error: any) {
+    res.status(400).send(error.message)
+  }
+}

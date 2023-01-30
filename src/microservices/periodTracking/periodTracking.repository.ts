@@ -71,3 +71,27 @@ export async function updatePeriodByUser(userId:string, periodId: string, data: 
         throw new Error(`Couldn't update the user, Error ${err}`);
     }
 }
+
+export async function getPeriodByID(userId: string, periodId: string,transaction: any): Promise<typeof User> {
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+        throw new NotFoundError(`User with id ${userId} not found`);
+    }
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await PeriodTracking.findOne({
+                where: { id:periodId },
+                transaction,
+            });
+
+            if(data.dataValues.userId !== user.id){
+                throw new UnauthorizedError(`User doesn't have access to period`);
+            }
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
