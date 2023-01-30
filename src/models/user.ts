@@ -56,6 +56,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
     email!: string;
     password!: string;
     resetPasswordVerified!: string;
+    static associate(models: any) {
+      User.hasMany(models.PeriodTracking, {
+        foreignKey: 'userId',
+        as: 'periodTracking',
+        sourceKey:'id'
+      })
+    }
   };
   User.init({
     id: {

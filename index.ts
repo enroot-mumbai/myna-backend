@@ -1,7 +1,10 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import auth from './src/microservices/auth/auth.route'
-import user from './src/microservices/user/user.route'
+
+// Routes
+import auth from './src/microservices/auth/auth.route';
+import user from './src/microservices/user/user.route';
+import periodTracking from './src/microservices/periodTracking/periodTracking.route';
 
 import { cleaner } from './src/middleware/cleaner';
 
@@ -34,6 +37,7 @@ app.use("/", cleaner);
 
 app.use("/auth", auth);
 app.use("/user", user);
+app.use("/periodTracking", periodTracking);
 app.use(errorMiddleware);
 
 
