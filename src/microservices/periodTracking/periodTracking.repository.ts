@@ -22,3 +22,18 @@ export async function createPeriodByUser(userId: string, data: PeriodProps): Pro
     });
     return period;
 }
+
+export async function getPeriodsByUser(userId: string,transaction: any): Promise<typeof User> {
+
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await PeriodTracking.findAll({
+                where: { userId },
+                transaction,
+            });
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}

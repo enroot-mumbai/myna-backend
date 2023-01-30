@@ -12,6 +12,18 @@ export async function createPeriodByUser(req: Request, res: Response, next: Next
     res.status(400).send(error.message);
   }
 }
+
+export async function getPeriodsByUser(req: Request, res: Response, next: NextFunction) {
+  const id = res.locals.user.dataValues.id;
+  try {
+    const periods = await periodTrackingRepository.getPeriodsByUser(id, null);
+    res.send(periods);
+  } catch (error: any) {
+    res.status(400).send(error.message)
+  }
+}
+
+
 export async function updatePeriodByUser(req: Request, res: Response, next: NextFunction) {
   // const data = req.body;
   // const id = res.locals.user.dataValues.id;
@@ -24,12 +36,3 @@ export async function updatePeriodByUser(req: Request, res: Response, next: Next
   // }
 }
 
-export async function getPeriodsByUser(req: Request, res: Response, next: NextFunction) {
-  // const id = Object.keys(res.locals).includes("user") ? res.locals.user.id : null;
-  // try {
-  //   const user = await userService.getUser(id);
-  //   res.send(user);
-  // } catch (error: any) {
-  //   res.status(400).send(error.message)
-  // }
-}
