@@ -25,14 +25,15 @@ export async function getPeriodsByUser(req: Request, res: Response, next: NextFu
 
 
 export async function updatePeriodByUser(req: Request, res: Response, next: NextFunction) {
-  // const data = req.body;
-  // const id = res.locals.user.dataValues.id;
+  const data = req.body;
+  const id = res.locals.user.dataValues.id;
+  const periodId = req.params.periodId;
 
-  // try {
-  //   const user = await periodTrackingRepository.updatePeriodByUser(id, data);
-  //   res.send(user);
-  // } catch (error: any) {
-  //   res.status(400).send(error.message);
-  // }
+  try {
+    const period = await periodTrackingRepository.updatePeriodByUser(id,periodId, data);
+    res.send(period);
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 }
 

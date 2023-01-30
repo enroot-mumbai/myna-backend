@@ -12,6 +12,6 @@ router.post('/',verifyToken,createPeriodValidation, createPeriodByUser)
 router.get('/',verifyToken, getPeriodsByUser);
 
 // Route to update a period by a user which is logged in
-router.put('/update',verifyToken, updatePeriodValidation, updatePeriodByUser);
+router.put('/:periodId/update',verifyToken, updatePeriodValidation, updatePeriodByUser);
 
 export default router;

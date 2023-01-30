@@ -1,4 +1,4 @@
-import { NotFoundError } from '../../utils/error-handler';
+import { NotFoundError, UnauthorizedError } from '../../utils/error-handler';
 import { mapDataToModel } from '../../utils/mapModelKeys';
 import dbConn from '../../models';
 
@@ -36,4 +36,38 @@ export async function getPeriodsByUser(userId: string,transaction: any): Promise
             reject(error);
         }
     });
+}
+
+
+export async function updatePeriodByUser(userId:string, periodId: string, data: { [key: string]: any }): Promise<typeof PeriodTracking> {
+
+    const { mappedData, extraData } = mapDataToModel(data, PeriodTracking);
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+        throw new NotFoundError(`User with id ${userId} not found`);
+    }
+   
+    const period = await PeriodTracking.findOne({
+        where: {id:periodId}
+    })
+
+    if (!period) {
+        throw new NotFoundError(`Period with id ${periodId} not found`);
+    }
+
+    if(period.userId !== user.id){
+        throw new UnauthorizedError(`User doesn't have access to period`);
+    }
+
+    if (Object.keys(extraData).length > 0) {
+        throw new Error(`Invalid keys: ${Object.keys(extraData).join(', ')}`);
+    }
+
+    try {
+        const result = await period.update(mappedData, { where: { id: periodId } });
+        return result
+    } catch (err) {
+        throw new Error(`Couldn't update the user, Error ${err}`);
+    }
 }
