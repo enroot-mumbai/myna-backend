@@ -23,7 +23,6 @@ const port = process.env.PORT || 3001;
 
 // !NOTE: do not change import order
 import db from "./src/models";
-import { users } from "./src/seeders/users";
 import errorMiddleware from "./src/middleware/error";
 
 // Add functions to app
@@ -57,8 +56,14 @@ app.get("/health-check", (req, res, next) => {
   res.status(200).json({ message: "Health check successful" });
 });
 
-db.sequelize.sync({ alter: true }).then(() => {
+if (process.env.SYNC) {
+  db.sequelize.sync({ alter: true }).then(() => {
+    app.listen(port, () => {
+      console.log(`App listening on port with sync ${port}`);
+    });
+  });
+} else {
   app.listen(port, () => {
     console.log(`App listening on port ${port}`);
   });
-});
+}
