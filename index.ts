@@ -58,9 +58,8 @@ app.get("/health-check", (req, res, next) => {
 
 if (process.env.SYNC) {
   db.sequelize.sync({ alter: true }).then(() => {
-    app.listen(port, () => {
-      console.log(`App listening on port with sync ${port}`);
-    });
+    console.log(`DB sync completed`);
+    process.exit(0);
   });
 } else {
   app.listen(port, () => {

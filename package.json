@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node build/index.js",
     "pm2": "pm2 start build/index.js --name myna_backend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync": "SYNC=true tsnd index.ts"
   },
   "keywords": [],
   "author": "",
