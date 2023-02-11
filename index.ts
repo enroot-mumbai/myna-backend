@@ -52,9 +52,17 @@ app.get("/health-check", (req, res, next) => {
     res.status(200).json({ message: "Health check successful" });
 });
 
-// db.sequelize.sync({ alter: true }).then(() => {
+if (process.env.SYNC) {
+    db.sequelize.sync({ alter: true }).then(() => {
+        app.listen(port, () => {
+            console.log(`App listening on port with sync ${port}`)
+        })
+    })
+} else {
     app.listen(port, () => {
         console.log(`App listening on port ${port}`)
     })
-// })
+}
+
+
 
