@@ -29,6 +29,9 @@ export async function getPeriodsByUser(userId: string,transaction: any): Promise
         try {
             let data = await PeriodTracking.findAll({
                 where: { userId },
+                order: [
+                    ['startDate', 'DESC'],
+                ],        
                 transaction,
             });
             resolve(data);
