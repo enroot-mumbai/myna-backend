@@ -26,7 +26,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     doctorId!: number;
 
     static associate(models: any) {
-      Availabilities.belongsTo(models.Doctor, {
+      Availabilities.belongsTo(models.AdminUser, {
         foreignKey: "doctorId",
         as: "doctor",
       });

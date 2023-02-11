@@ -1,11 +1,11 @@
 import dbConn from "./../../models";
 import { NotFoundError } from "../../utils/error-handler";
 
-const Doctor = dbConn.Doctor;
+const AdminUser = dbConn.AdminUser;
 
 export const getDoctorByUuid = (uuid: string) => {
   try {
-    const doctor = Doctor.findOne({
+    const doctor = AdminUser.findOne({
       where: {
         uuid,
       },
@@ -19,7 +19,7 @@ export const getDoctorByUuid = (uuid: string) => {
 
 export const getDoctorByEmail = (email: string) => {
   try {
-    const doctor = Doctor.findOne({
+    const doctor = AdminUser.findOne({
       where: {
         email,
       },
@@ -38,7 +38,10 @@ export const addDoctor = (
   transaction: any = null
 ) => {
   try {
-    const doctor = Doctor.create(data, { transaction });
+    const doctor = AdminUser.create(
+      { ...data, role: "doctor" },
+      { transaction }
+    );
     return doctor;
   } catch (error) {
     throw error;
