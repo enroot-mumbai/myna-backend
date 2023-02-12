@@ -7,6 +7,8 @@ import user from "./src/microservices/user/user.route";
 import periodTracking from "./src/microservices/periodTracking/periodTracking.route";
 import admin from "./src/microservices/admin/admin.route";
 import videoProgressTracking from "./src/microservices/videoProgressTracking/videoProgressTracking.route";
+import doctor from "./src/microservices/doctor/doctor.route";
+import appointment from "./src/microservices/appointment/appointment.route";
 
 import { cleaner } from "./src/middleware/cleaner";
 
@@ -19,8 +21,9 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// !NOTE: do not change import order
 import db from "./src/models";
-import { users } from "./src/seeders/users";
 import errorMiddleware from "./src/middleware/error";
 
 // Add functions to app
@@ -41,6 +44,9 @@ app.use("/user", user);
 app.use("/periodTracking", periodTracking);
 app.use("/admin", admin);
 app.use("/videoProgressTracking", videoProgressTracking);
+app.use("/doctor", doctor);
+app.use("/appointment", appointment);
+
 app.use(errorMiddleware);
 
 app.get("/", (req: Request, res: Response) => {
