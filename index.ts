@@ -6,6 +6,7 @@ import auth from "./src/microservices/auth/auth.route";
 import user from "./src/microservices/user/user.route";
 import periodTracking from "./src/microservices/periodTracking/periodTracking.route";
 import admin from "./src/microservices/admin/admin.route";
+import videoProgressTracking from "./src/microservices/videoProgressTracking/videoProgressTracking.route";
 import doctor from "./src/microservices/doctor/doctor.route";
 import appointment from "./src/microservices/appointment/appointment.route";
 
@@ -42,6 +43,7 @@ app.use("/auth", auth);
 app.use("/user", user);
 app.use("/periodTracking", periodTracking);
 app.use("/admin", admin);
+app.use("/videoProgressTracking", videoProgressTracking);
 app.use("/doctor", doctor);
 app.use("/appointment", appointment);
 
