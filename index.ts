@@ -6,6 +6,7 @@ import auth from "./src/microservices/auth/auth.route";
 import user from "./src/microservices/user/user.route";
 import periodTracking from "./src/microservices/periodTracking/periodTracking.route";
 import admin from "./src/microservices/admin/admin.route";
+import videoProgressTracking from "./src/microservices/videoProgressTracking/videoProgressTracking.route";
 
 import { cleaner } from "./src/middleware/cleaner";
 
@@ -39,6 +40,7 @@ app.use("/auth", auth);
 app.use("/user", user);
 app.use("/periodTracking", periodTracking);
 app.use("/admin", admin);
+app.use("/videoProgressTracking", videoProgressTracking);
 app.use(errorMiddleware);
 
 app.get("/", (req: Request, res: Response) => {

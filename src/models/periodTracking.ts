@@ -12,7 +12,7 @@ interface PeriodTrackingAttributes {
   startDate: Date;
   endDate: Date;
   symptoms: string;
-  notes:string;
+  notes: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
@@ -23,11 +23,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
     updatedBy!: string;
     startDate!: Date;
     endDate!: Date;
-    symptoms!:string;
-    notes!:string;
+    symptoms!: string;
+    notes!: string;
     static associate(models: any) {
       PeriodTracking.belongsTo(models.User, {
-        foreignKey:'userId',
+        foreignKey: 'userId',
         targetKey: 'id',
         as: 'UserId',
       })
