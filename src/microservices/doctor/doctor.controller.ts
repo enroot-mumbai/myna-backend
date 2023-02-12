@@ -10,7 +10,6 @@ export const addDoctor = async (
   next: NextFunction
 ) => {
   const { sequelize } = await dbConn;
-  console.log(sequelize, "sequelize");
 
   const transaction = await sequelize.transaction();
   try {

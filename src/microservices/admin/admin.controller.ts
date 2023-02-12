@@ -100,3 +100,30 @@ export async function allDoctors(
     res.status(400).send(error.message);
   }
 }
+
+export async function adminDetails(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { masterkey, role } = await req.body;
+  const { id } = req.params;
+
+  if (role === "superadmin") {
+    if (masterkey !== process.env.MASTER_KEY) {
+      throw new UnauthorizedError(`You're not allowed on this route`);
+    }
+    // Else check if the user which is logged in has superadmin rights
+    // Also do that for other roles in else
+  }
+
+  try {
+    const doctor = await adminModel.getAdminByUuid(id);
+    delete doctor.id;
+
+    res.status(200).send({ data: doctor });
+  } catch (error: any) {
+    console.log("error", error);
+    res.status(400).send(error.message);
+  }
+}

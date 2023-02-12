@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import { RRule, RRuleSet, Weekday } from "rrule";
 import { getHours, getMinutes } from "../../common/functions/time";
 import { ConflictError, NotFoundError } from "../../utils/error-handler";
-import * as doctorRepository from "../doctor/doctor.repository";
+import * as adminRepository from "../admin/admin.repository";
 import * as appointmentRepository from "./appointment.repository";
 import {
   DEFAULT_DURATION,
@@ -74,7 +74,7 @@ export const addSlotByDoctorId = async (
     let { duration, intervalBetweenSlots, weeklyAvailability } = req.body;
     const { doctorId } = req.params;
 
-    const doctor = await doctorRepository.getDoctorByUuid(doctorId as string);
+    const doctor = await adminRepository.getAdminByUuid(doctorId as string);
 
     if (!doctor) {
       throw new NotFoundError(`Error finding doctor with uuid ${doctorId}`);
@@ -123,7 +123,7 @@ export const updateSlotByDoctorId = async (
     intervalBetweenSlots = intervalBetweenSlots || DEFAULT_SLOT_INTERVAL;
 
     // checks if doctor exists in DB or not
-    const doctor = await doctorRepository.getDoctorByUuid(doctorId as string);
+    const doctor = await adminRepository.getAdminByUuid(doctorId as string);
     if (!doctor) {
       throw new NotFoundError(`Error finding doctor with uuid ${doctorId}`);
     }
@@ -144,13 +144,6 @@ export const updateSlotByDoctorId = async (
       doctorId: doctor.id,
     };
 
-    const transformed = [];
-
-    for (let [weekday, value] of Object.entries(weeklyAvailability)) {
-    }
-
-    return;
-
     const availabilites = await appointmentRepository.updateSlotByDoctorId(
       doctorAvailability.id,
       data
@@ -160,6 +153,37 @@ export const updateSlotByDoctorId = async (
     delete availabilites[1].dataValues.doctorId;
 
     res.send(availabilites[1].dataValues);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getWeeklySlotByDoctorId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { doctorId } = req.params;
+
+    const doctor = await adminRepository.getAdminByUuid(doctorId);
+
+    if (!doctor) {
+      throw new NotFoundError(`Error finding doctor with uuid ${doctorId}`);
+    }
+
+    const doctorAvailability =
+      await appointmentRepository.getAvailableSlotsByDoctorId(doctor.id);
+
+    if (!doctorAvailability) {
+      throw new ConflictError(
+        `Cannot find availability of doctor with uuid ${doctorId} to update`
+      );
+    }
+
+    delete doctorAvailability.id;
+
+    res.send(doctorAvailability);
   } catch (error) {
     next(error);
   }

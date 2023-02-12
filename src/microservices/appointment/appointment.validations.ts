@@ -20,7 +20,7 @@ export const getAvailabilityValidation = async (
   }
 };
 
-export const putAvailableSlotValidation = async (
+export const availableSlotValidation = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -30,13 +30,13 @@ export const putAvailableSlotValidation = async (
       duration: "required|integer",
       intervalBetweenSlots: "required|integer",
       weeklyAvailability: {
-        Monday: "required|array",
-        Tuesday: "required|array",
-        Wednesday: "required|array",
-        Thursday: "required|array",
-        Friday: "required|array",
-        Saturday: "required|array",
-        Sunday: "required|array",
+        Monday: "array",
+        Tuesday: "array",
+        Wednesday: "array",
+        Thursday: "array",
+        Friday: "array",
+        Saturday: "array",
+        Sunday: "array",
       },
     };
 

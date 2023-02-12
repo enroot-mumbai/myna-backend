@@ -28,6 +28,13 @@ export async function getAvailableSlotsByDoctorId(
       where: {
         doctorId,
       },
+      attributes: [
+        "id",
+        "weeklyAvailability",
+        "uuid",
+        "duration",
+        "intervalBetweenSlots",
+      ],
     });
     return availabilites || null;
   } catch (error) {
