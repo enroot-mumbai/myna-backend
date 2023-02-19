@@ -17,8 +17,7 @@ interface AdminUserAttributes {
 module.exports = (sequelize: any, DataTypes: any) => {
   class AdminUser
     extends Model<AdminUserAttributes>
-    implements AdminUserAttributes
-  {
+    implements AdminUserAttributes {
     uuid!: string;
     phone!: string;
     createdBy!: string;
