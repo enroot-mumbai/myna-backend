@@ -41,11 +41,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
       primaryKey: true,
     },
     createdBy: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     updatedBy: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     startDate: {

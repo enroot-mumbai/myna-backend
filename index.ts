@@ -59,10 +59,18 @@ app.get("/health-check", (req, res, next) => {
 });
 
 if (process.env.SYNC) {
-  db.sequelize.sync({ alter: true }).then(() => {
-    console.log(`DB sync completed`);
-    process.exit(0);
-  });
+  if (process.env.FORCE) {
+    db.sequelize.sync({ force: true }).then(() => {
+      console.log(`DB sync completed`);
+      process.exit(0);
+    });
+  }
+  else {
+    db.sequelize.sync({ alter: true }).then(() => {
+      console.log(`DB sync completed`);
+      process.exit(0);
+    });
+  }
 } else {
   app.listen(port, () => {
     console.log(`App listening on port ${port}`);

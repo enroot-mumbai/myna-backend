@@ -9,7 +9,8 @@
     "start": "node build/index.js",
     "pm2": "pm2 start build/index.js --name myna_backend",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sync": "SYNC=true tsnd index.ts"
+    "sync": "SYNC=true tsnd index.ts",
+    "forcesync": "SYNC=true FORCE=true tsnd index.ts"
   },
   "keywords": [],
   "author": "",
@@ -40,7 +41,7 @@
     "nanoid": "^3.3.4",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
-    "rrule": "^2.7.1",
+    "rrule": "^2.7.2",
     "sequelize": "^6.6.2",
     "uuid": "^8.3.2",
     "validatorjs": "^3.22.1",
