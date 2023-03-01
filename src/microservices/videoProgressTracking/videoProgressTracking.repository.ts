@@ -51,7 +51,7 @@ export async function updateVideoProgressByUser(userId: string, videoProgressId:
 
 }
 
-export async function getvideoProgresssByUser(userId: string, transaction: any): Promise<typeof User> {
+export async function getvideoProgressByUser(userId: string, transaction: any): Promise<typeof User> {
 
     return new Promise(async (resolve, reject) => {
         try {

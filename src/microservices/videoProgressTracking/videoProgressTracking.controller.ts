@@ -7,18 +7,18 @@ export async function updateVideoProgressByUser(req: Request, res: Response, nex
   const id = res.locals.user.dataValues.id;
   const videoProgressId = req.params.videoProgressId;
   try {
-    const videoProgress = await videoProgressTrackingRepository.updateVideoProgressByUser(id,videoProgressId, data);
+    const videoProgress = await videoProgressTrackingRepository.updateVideoProgressByUser(id, videoProgressId, data);
     res.send(videoProgress);
   } catch (error: any) {
     res.status(400).send(error.message);
   }
 }
 
-export async function getvideoProgresssByUser(req: Request, res: Response, next: NextFunction) {
+export async function getvideoProgressByUser(req: Request, res: Response, next: NextFunction) {
   const id = res.locals.user.dataValues.id;
   try {
-    const videoProgresss = await videoProgressTrackingRepository.getvideoProgresssByUser(id, null);
-    res.send(videoProgresss);
+    const videoProgress = await videoProgressTrackingRepository.getvideoProgressByUser(id, null);
+    res.send(videoProgress);
   } catch (error: any) {
     res.status(400).send(error.message)
   }
@@ -30,7 +30,7 @@ export async function getvideoProgressByID(req: Request, res: Response, next: Ne
   const id = res.locals.user.dataValues.id;
   const videoProgressId = req.params.videoProgressId;
   try {
-    const videoProgress = await videoProgressTrackingRepository.getvideoProgressByID(id,videoProgressId, null);
+    const videoProgress = await videoProgressTrackingRepository.getvideoProgressByID(id, videoProgressId, null);
     res.send(videoProgress);
   } catch (error: any) {
     res.status(400).send(error.message)

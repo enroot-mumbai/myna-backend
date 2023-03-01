@@ -140,8 +140,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
   User.beforeCreate(
     async (user: User, _: CreateOptions<UserAttributes>): Promise<any> => {
       let userToken = await getLargestToken();
-      user.userToken =
-        Number(userToken) + Math.floor(Number(Math.random().toFixed(2)) * 100);
+      userToken = Number(userToken) + Math.floor(Number(Math.random().toFixed(2)) * 100);
+      user.userToken = Number(userToken);
       return user;
     }
   );

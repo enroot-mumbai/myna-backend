@@ -19,7 +19,7 @@ export const jwtSign = (token: any) => {
   }
 
   return `Bearer ${jwt.sign(JSON.parse(JSON.stringify(tokenToSign)), jwtSecretKey, {
-    expiresIn: "90d",
+    expiresIn: "900d",
   })}`;
 };
 

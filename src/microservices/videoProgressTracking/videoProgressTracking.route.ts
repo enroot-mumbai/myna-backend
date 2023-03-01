@@ -1,6 +1,6 @@
 import express from 'express';
 import { verifyToken } from '../../middleware/authentication';
-import { getvideoProgresssByUser, updateVideoProgressByUser, getvideoProgressByID } from './videoProgressTracking.controller';
+import { getvideoProgressByUser, updateVideoProgressByUser, getvideoProgressByID } from './videoProgressTracking.controller';
 import { createVideoProgressValidation } from './videoProgressTracking.validations';
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 router.put('/:videoProgressId', verifyToken, createVideoProgressValidation, updateVideoProgressByUser);
 
 // Route to get all the video progress of a user which is logged in
-router.get('/', verifyToken, getvideoProgresssByUser);
+router.get('/', verifyToken, getvideoProgressByUser);
 
 // Route to get the video progress with an id
 router.get('/:videoProgressId', verifyToken, getvideoProgressByID);
