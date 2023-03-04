@@ -5,6 +5,8 @@ import {
   UnauthorizedError,
 } from "../../utils/error-handler";
 import * as adminModel from "./admin.repository";
+import * as userModel from "./../user/user.repository";
+
 import { jwtSign } from "../../common/functions/jwt";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
@@ -76,54 +78,74 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function allDoctors(
+// export async function allDoctors(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   const { masterkey, role } = await req.body;
+
+//   if (role === "superadmin") {
+//     if (masterkey !== process.env.MASTER_KEY) {
+//       throw new UnauthorizedError(`You're not allowed on this route`);
+//     }
+//     // Else check if the user which is logged in has superadmin rights
+//     // Also do that for other roles in else
+//   }
+
+//   try {
+//     const doctors = await adminModel.getAllDoctors();
+
+//     res.status(200).send({ data: doctors });
+//   } catch (error: any) {
+//     console.log("error", error);
+//     res.status(400).send(error.message);
+//   }
+// }
+
+// export async function adminDetails(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) {
+//   const { masterkey, role } = await req.body;
+//   const { id } = req.params;
+
+//   if (role === "superadmin") {
+//     if (masterkey !== process.env.MASTER_KEY) {
+//       throw new UnauthorizedError(`You're not allowed on this route`);
+//     }
+//     // Else check if the user which is logged in has superadmin rights
+//     // Also do that for other roles in else
+//   }
+
+//   try {
+//     const doctor = await adminModel.getAdminByUuid(id);
+//     delete doctor.id;
+
+//     res.status(200).send({ data: doctor });
+//   } catch (error: any) {
+//     console.log("error", error);
+//     res.status(400).send(error.message);
+//   }
+// }
+
+
+
+export async function getAllUsers(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const { masterkey, role } = await req.body;
-
-  if (role === "superadmin") {
-    if (masterkey !== process.env.MASTER_KEY) {
-      throw new UnauthorizedError(`You're not allowed on this route`);
-    }
-    // Else check if the user which is logged in has superadmin rights
-    // Also do that for other roles in else
-  }
-
   try {
-    const doctors = await adminModel.getAllDoctors();
-
-    res.status(200).send({ data: doctors });
-  } catch (error: any) {
-    console.log("error", error);
-    res.status(400).send(error.message);
+    let { page, size, q, startDate, endDate, sortBy, orderBy }: any = req.query;
+    page = page ? parseInt(page) : 1;
+    size = size ? parseInt(size) : 100;
+    let users = await userModel.getAllUsers(size, page, { q, startDate, endDate, sortBy, orderBy });
+    res.status(200).send({ data: users });
+  } catch (error) {
+    next(error);
   }
 }
 
-export async function adminDetails(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const { masterkey, role } = await req.body;
-  const { id } = req.params;
 
-  if (role === "superadmin") {
-    if (masterkey !== process.env.MASTER_KEY) {
-      throw new UnauthorizedError(`You're not allowed on this route`);
-    }
-    // Else check if the user which is logged in has superadmin rights
-    // Also do that for other roles in else
-  }
-
-  try {
-    const doctor = await adminModel.getAdminByUuid(id);
-    delete doctor.id;
-
-    res.status(200).send({ data: doctor });
-  } catch (error: any) {
-    console.log("error", error);
-    res.status(400).send(error.message);
-  }
-}

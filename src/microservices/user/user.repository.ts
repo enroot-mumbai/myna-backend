@@ -1,6 +1,7 @@
 import { NotFoundError } from '../../utils/error-handler';
 import { mapDataToModel } from '../../utils/mapModelKeys';
 import dbConn from './../../models';
+import { Op } from 'sequelize'
 
 const User = dbConn.User;
 
@@ -65,7 +66,7 @@ export async function createUserWithPhone(phone: string, password: string, otp: 
         },
         userToken: user.dataValues.userToken
     }
-    
+
     return userData;
 }
 
@@ -130,3 +131,74 @@ export async function getUserById(id: string, transaction: any): Promise<typeof 
         }
     });
 };
+
+export async function getAllUsers(limit = 10, page = 1, filters: any): Promise<typeof User | null> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { q, startDate, endDate, sortBy, orderBy } = filters;
+            let whereCondition = {};
+            let orderCondition = [];
+            if (undefined !== startDate) {
+                whereCondition = {
+                    ...whereCondition,
+                    ...{
+                        created: {
+                            [Op.gte]: startDate,
+                        },
+                    },
+                };
+            }
+
+            if (undefined !== endDate) {
+                whereCondition = {
+                    ...whereCondition,
+                    ...{
+                        created: {
+                            [Op.gte]: endDate,
+                        },
+                    },
+                };
+            }
+
+            if (undefined !== q) {
+                whereCondition = {
+                    ...whereCondition,
+                    [Op.or]: [
+                        {
+                            email: { [Op.like]: `%${q}%` },
+                        },
+                        {
+                            phone: { [Op.like]: `%${q}%` },
+                        },
+                        {
+                            name: { [Op.like]: `%${q}%` },
+                        },
+                        {
+                            userToken: { [Op.like]: `%${q}%` },
+                        },
+                    ],
+                };
+            }
+
+            if (undefined !== sortBy && undefined !== orderBy) {
+                orderCondition.push([sortBy, orderBy]);
+            }
+
+            let data = await User.findAndCountAll({
+                attributes: [
+                    "name",
+                    "userToken",
+                    "email",
+                    "phone",
+                ],
+                limit,
+                offset: limit * (page - 1),
+                where: whereCondition,
+                order: orderCondition,
+            });
+            resolve(data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
